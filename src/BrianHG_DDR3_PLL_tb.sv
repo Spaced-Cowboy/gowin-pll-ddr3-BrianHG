@@ -23,7 +23,7 @@ module BrianHG_DDR3_PLL_tb #(
 
 parameter string     FPGA_VENDOR             = "Altera",       // Use ALTERA, INTEL, LATTICE or XILINX.
 parameter string     FPGA_FAMILY             = "Cyclone V",    // (USE "SIM" for RTL simulation bypassing any HW dependent functions) With Altera, use Cyclone III, Cyclone IV, Cyclone V, MAX 10,....
-parameter string     FPGA_PLL_FAMILY         = "GW2A-18",      // (Gowin family identifier)
+parameter            FPGA_PLL_FAMILY         = "GW2A-18",      // (Gowin family identifier)
 parameter int        CLK_KHZ_IN              = 50000,          // PLL source input clock frequency in KHz.
 parameter int        CLK_IN_MULT             = 32,             // Multiply factor to generate the DDR MTPS speed divided by 2.
 parameter int        CLK_IN_DIV              = 4,              // Divide factor.  When CLK_KHZ_IN is 25000,50000,75000,100000,125000,150000, use 2,4,6,8,10,12.

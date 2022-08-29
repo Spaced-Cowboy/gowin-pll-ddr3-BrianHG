@@ -24,7 +24,9 @@
 
 module gowin_ddr_clocking 
    #(
-    parameter string    FPGA_FAMILY         = "GW2A-18",
+    // ****************  family definition. Modelsim doesn't like me typing
+    //                   this a string
+    parameter           FPGA_FAMILY         = "GW2A-18",
  
     // ****************  System clock generation and operation.
 
@@ -150,7 +152,7 @@ module gowin_ddr_clocking
     defparam ddr3_pll1.DYN_SDIV_SEL = 2;
     defparam ddr3_pll1.CLKOUTD_SRC = "CLKOUT";
     defparam ddr3_pll1.CLKOUTD3_SRC = "CLKOUT";
-    defparam ddr3_pll1.DEVICE = "GW2A-18";
+    defparam ddr3_pll1.DEVICE = FPGA_FAMILY;
 
 
     ///////////////////////////////////////////////////////////////////////////
@@ -203,7 +205,7 @@ module gowin_ddr_clocking
     defparam ddr3_pll2.DYN_SDIV_SEL = 4;
     defparam ddr3_pll2.CLKOUTD_SRC = "CLKOUT";
     defparam ddr3_pll2.CLKOUTD3_SRC = "CLKOUT";
-    defparam ddr3_pll2.DEVICE = "GW2A-18";
+    defparam ddr3_pll2.DEVICE = FPGA_FAMILY;
 
     assign locked = lock_pll1 & lock_pll2;
 
