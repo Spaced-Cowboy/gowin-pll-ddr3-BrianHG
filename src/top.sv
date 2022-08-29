@@ -8,7 +8,7 @@ module top
     parameter string     FPGA_VENDOR             = "Gowin",
 
     // (FPGA family identifier), passed to PLL
-    parameter            FPGA_FAMILY             = "GW2A-18",
+    parameter string     FPGA_FAMILY             = "GW2A-18",
 
     // PLL source input clock frequency in KHz.
     parameter int        CLK_KHZ_IN              = 50000,         

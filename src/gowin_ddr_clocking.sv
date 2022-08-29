@@ -25,7 +25,7 @@
 module gowin_ddr_clocking 
    #(
     // ****************  family definition. Modelsim doesn't like me typing
-    //                   this a string
+    //                   this as a string
     parameter           FPGA_FAMILY         = "GW2A-18",
  
     // ****************  System clock generation and operation.
@@ -209,6 +209,9 @@ module gowin_ddr_clocking
     defparam ddr3_pll2.CLKOUTD3_SRC = "CLKOUT";
     defparam ddr3_pll2.DEVICE = FPGA_FAMILY;
 
+    // Pushing on a rope here... We need the 'synthesis translate_on/off' for
+    // the Gowin synthesis to run, and we need the `ifdef block for Modelsim
+    // to not get upset over the defparams that use the string format. Yuk.  
 	`ifdef synthesis
 		defparam ddr3_pll2.DUTYDA_SEL 	= gowin_phase[duty_phase[3:0]];
 		defparam ddr3_pll2.PSDA_SEL 	= gowin_phase[write_phase[3:0]];
