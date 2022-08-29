@@ -62,8 +62,12 @@ module gowin_ddr_clocking
     ///////////////////////////////////////////////////////////////////////////
     // Allow definitions from the top-level-source to customise this PLL
     ///////////////////////////////////////////////////////////////////////////
-    localparam  write_phase = (DDR3_WDQ_PHASE * 16 / 360);
-    localparam  duty_phase  = (write_phase + 8) % 16;
+	localparam 	string 	gowin_phase[0:15] 	='{"0000","0001","0010","0011",
+											   "0100","0101","0110","0111",
+											   "1001","1001","1010","1011",
+											   "1100","1101","1110","1111"};
+    localparam  		write_phase			 = (DDR3_WDQ_PHASE * 16 / 360);
+    localparam  		duty_phase  = (write_phase + 8) % 16;
     
     ///////////////////////////////////////////////////////////////////////////
     // Provide the step-based facade over the direct-program Gowin interface
@@ -119,7 +123,7 @@ module gowin_ddr_clocking
         .CLKOUTP(clk_ddrRead),
         .CLKOUTD(clk_ddrClient),
         .CLKOUTD3(clkoutd3_pll1),
-        .RESET(reset),
+        .RESET(rst),
         .RESET_P(1'b0),
         .CLKIN(clk),
         .CLKFB(1'b0),
@@ -184,16 +188,14 @@ module gowin_ddr_clocking
         .FDLY({1'b0, 1'b0, 1'b0, 1'b0})
     );
 
-    defparam ddr3_pll1.FCLKIN = (CLK_KHZ_IN /1000);
+    defparam ddr3_pll2.FCLKIN = (CLK_KHZ_IN /1000);
     defparam ddr3_pll2.DYN_IDIV_SEL = "false";
-    defparam ddr3_pll1.IDIV_SEL = (CLK_IN_DIV-1);
+    defparam ddr3_pll2.IDIV_SEL = (CLK_IN_DIV-1);
     defparam ddr3_pll2.DYN_FBDIV_SEL = "false";
-    defparam ddr3_pll1.FBDIV_SEL = (CLK_IN_MULT-1);
+    defparam ddr3_pll2.FBDIV_SEL = (CLK_IN_MULT-1);
     defparam ddr3_pll2.DYN_ODIV_SEL = "false";
     defparam ddr3_pll2.ODIV_SEL = 2;
-    defparam ddr3_pll1.PSDA_SEL = write_phase[3:0];
     defparam ddr3_pll2.DYN_DA_EN = "false";
-    defparam ddr3_pll2.DUTYDA_SEL = duty_phase[3:0];
     defparam ddr3_pll2.CLKOUT_FT_DIR = 1'b1;
     defparam ddr3_pll2.CLKOUTP_FT_DIR = 1'b1;
     defparam ddr3_pll2.CLKOUT_DLY_STEP = 0;
@@ -206,6 +208,17 @@ module gowin_ddr_clocking
     defparam ddr3_pll2.CLKOUTD_SRC = "CLKOUT";
     defparam ddr3_pll2.CLKOUTD3_SRC = "CLKOUT";
     defparam ddr3_pll2.DEVICE = FPGA_FAMILY;
+
+	`ifdef synthesis
+		defparam ddr3_pll2.DUTYDA_SEL 	= gowin_phase[duty_phase[3:0]];
+		defparam ddr3_pll2.PSDA_SEL 	= gowin_phase[write_phase[3:0]];
+	`else
+		/* synthesis translate_off */
+		defparam ddr3_pll2.DUTYDA_SEL 	= duty_phase[3:0];
+		defparam ddr3_pll2.PSDA_SEL 	= write_phase[3:0];
+		/* synthesis translate_on */
+	`endif
+
 
     assign locked = lock_pll1 & lock_pll2;
 

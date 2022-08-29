@@ -1,4 +1,4 @@
-`timescale 1ps / 1ps // 1 ps steps, 1 ns precision.
+`timescale 1ps / 1ps // 1 ps steps, 1 ps precision.
 
 module top_tb;
 
