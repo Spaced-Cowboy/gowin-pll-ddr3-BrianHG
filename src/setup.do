@@ -13,10 +13,8 @@ vlib work
 #
 vmap work work
 vlog -work work "prim_sim.v"
-vlog -work work {top.v}
-vlog -work work {gowin_ddr_clocking.v}
-vlog -work work {top_tb.v}
-vlog -work work {pll_ddr1/pll_ddr1.v}
+vlog -sv -work work {gowin_ddr_clocking.sv}
+vlog -sv -work work {top_tb.v}
 vlog -work work {pll_ddr2/pll_ddr2.v}
 vlog -sv -work work {BrianHG_DDR3_PLL.sv}
 vlog -sv -work work {BrianHG_DDR3_PLL_tb.sv}
@@ -29,7 +27,7 @@ vlog -sv -work work {BrianHG_DDR3_PLL_tb.sv}
 #vsim -t 1ps -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L fiftyfivenm_ver -L work -voptargs="+acc"    BrianHG_DDR3_PLL_tb
 
 # Make Cyclone V Megafunctions and PLL available.
- vsim -t 1ps -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L cyclonev_ver -L cyclonev_hssi_ver -L cyclonev_pcie_hip_ver -L work -voptargs="+acc"  BrianHG_DDR3_PLL_tb
+vsim -t 1ps -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L cyclonev_ver -L cyclonev_hssi_ver -L cyclonev_pcie_hip_ver -L work -voptargs="+acc"  BrianHG_DDR3_PLL_tb
 
 restart -force -nowave
 

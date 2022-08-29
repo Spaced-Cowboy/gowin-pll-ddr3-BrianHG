@@ -23,6 +23,7 @@ module BrianHG_DDR3_PLL_tb #(
 
 parameter string     FPGA_VENDOR             = "Altera",       // Use ALTERA, INTEL, LATTICE or XILINX.
 parameter string     FPGA_FAMILY             = "Cyclone V",    // (USE "SIM" for RTL simulation bypassing any HW dependent functions) With Altera, use Cyclone III, Cyclone IV, Cyclone V, MAX 10,....
+parameter string     FPGA_PLL_FAMILY         = "GW2A-18",      // (Gowin family identifier)
 parameter int        CLK_KHZ_IN              = 50000,          // PLL source input clock frequency in KHz.
 parameter int        CLK_IN_MULT             = 32,             // Multiply factor to generate the DDR MTPS speed divided by 2.
 parameter int        CLK_IN_DIV              = 4,              // Divide factor.  When CLK_KHZ_IN is 25000,50000,75000,100000,125000,150000, use 2,4,6,8,10,12.
@@ -81,16 +82,21 @@ BrianHG_DDR3_PLL  #(.FPGA_VENDOR    (FPGA_VENDOR),    .INTERFACE_SPEED (INTERFAC
 // Create a Gowin-equivalent for the DDR clocks to compare with the above original.
 // *********************************************************************************************
 wire gowin_clocks_locked;
-reg [3:0] ddr_delay;
-
-gowin_ddr_clocking gowin_ddr_clocks
+gowin_ddr_clocking 
+   #(
+	.FPGA_FAMILY		(FPGA_PLL_FAMILY),
+    .CLK_KHZ_IN			(CLK_KHZ_IN),
+    .CLK_IN_MULT		(CLK_IN_MULT),
+    .CLK_IN_DIV			(CLK_IN_DIV),
+    .DDR3_WDQ_PHASE 	(DDR3_WDQ_PHASE)
+    )
+    gowin_ddr_clocks
     (
     .clk(CLK_IN),					// Input clock from the board
     .rst(RST_IN),					// Input reset signal 
     
     .phase_step(phase_step),		// Step the phase
     .phase_updn(phase_updn),        // Direction to step
-    .fdly(ddr_delay),				// Delay on phase-shifted clock
 
     .clk_ddrMain(clk_ddrMain),		// Main DDR clock
     .clk_ddrWrite(clk_ddrWrite),	// DDR clock for write-ops
@@ -104,10 +110,8 @@ gowin_ddr_clocking gowin_ddr_clocks
 
 initial begin
 phase_step = 1'b0 ;
-phase_updn = 1'b0 ;
+phase_updn = 1'b1 ;
 phase_sclk = 1'b0 ;
-
-ddr_delay   = 4'b0;
 
 RST_IN = 1'b1 ; // Reset input
 CLK_IN = 1'b0 ;
