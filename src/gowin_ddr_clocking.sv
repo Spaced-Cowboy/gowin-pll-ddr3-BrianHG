@@ -65,12 +65,15 @@ module gowin_ddr_clocking
     // Define the localparam list as an int, then use it indexed in the PLL to
     // make it work in both synthesis and simulation
     ///////////////////////////////////////////////////////////////////////////
-	localparam 	int 	gowin_phase[0:15] 	='{"0000","0001","0010","0011",
+	localparam 	int 	write_phase[0:15] 	='{"0000","0001","0010","0011",
 											   "0100","0101","0110","0111",
-											   "1001","1001","1010","1011",
+											   "1000","1001","1010","1011",
 											   "1100","1101","1110","1111"};
-    localparam  		write_phase			 = (DDR3_WDQ_PHASE * 16 / 360);
-    localparam  		duty_phase  = (write_phase + 8) % 16;
+	localparam 	int 	duty_phase[0:15] 	='{"1100","1101","1110","1111",
+											   "0000","0001","0010","0011",
+											   "0100","0101","0110","0111",
+											   "1000","1001","1010","1011"};
+    localparam  		phaseIndex		    = (DDR3_WDQ_PHASE * 16 / 360);
     
     ///////////////////////////////////////////////////////////////////////////
     // Provide the step-based facade over the direct-program Gowin interface
@@ -211,8 +214,8 @@ module gowin_ddr_clocking
     defparam ddr3_pll2.CLKOUTD_SRC      = "CLKOUT";
     defparam ddr3_pll2.CLKOUTD3_SRC     = "CLKOUT";
     defparam ddr3_pll2.DEVICE           = FPGA_FAMILY;
-	defparam ddr3_pll2.DUTYDA_SEL 	    = gowin_phase[duty_phase[3:0]];
-	defparam ddr3_pll2.PSDA_SEL 	    = gowin_phase[write_phase[3:0]];
+	defparam ddr3_pll2.DUTYDA_SEL 	    = duty_phase[phaseIndex[3:0]];
+	defparam ddr3_pll2.PSDA_SEL 	    = write_phase[phaseIndex[3:0]];
 
     assign locked = lock_pll1 & lock_pll2;
 
